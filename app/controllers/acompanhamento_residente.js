@@ -30,36 +30,34 @@ class AcompanhamentoResidente {
             AcompanhamentoResidenteModel.create(element)
                 .then(() => {
                     count++
-                    if(count == array.length)
+                    if (count == array.length)
                         res.json({ message: `Foram adicionados ${count} Acompanhamentos Residentes` })
                 })
                 .catch(error => res.json(error))
         })
-    } 
-     
+    }
 
-      delete(req, res){ 
-          let idRe = req.params.idResidente
-          let idAc = req.params.idAcompanhamento
-          let deleteAc = 'DELETE FROM ACOMPANHAMENTO_RESIDENTE WHERE CODIGO_RESIDENTE = "' + idRe + '"  AND ACOMPANHAMENTO_CODIGO = "' + idAc + '" '
+
+    delete(req, res) {
+        let idRe = req.params.idResidente
+        let idAc = req.params.idAcompanhamento
+        let deleteAc = 'DELETE FROM ACOMPANHAMENTO_RESIDENTE WHERE CODIGO_RESIDENTE = "' + idRe + '"  AND ACOMPANHAMENTO_CODIGO = "' + idAc + '" '
 
         sequelize.query(deleteAc)
-         .then(result => {
-             res.json(result[0])
-             })
-          }      
+            .then(result => {
+                res.json(result[0])
+            })
+    }
 
-          deleteAll(req, res){ 
-            
-            let idAc = req.params.idAcompanhamento
-            let deleteAc = 'DELETE FROM ACOMPANHAMENTO_RESIDENTE WHERE ACOMPANHAMENTO_CODIGO = "' + idAc + '" '
-    
-          sequelize.query(deleteAc)
-           .then(result => {
-               res.json(result[0])
-               })
-            }
+    deleteAll(req, res) {
 
+        let idAc = req.params.idAcompanhamento
+        let deleteAc = 'DELETE FROM ACOMPANHAMENTO_RESIDENTE WHERE ACOMPANHAMENTO_CODIGO = "' + idAc + '" '
 
+        sequelize.query(deleteAc)
+            .then(result => {
+                res.json(result[0])
+            })
+    }
 }
 module.exports = new AcompanhamentoResidente()
