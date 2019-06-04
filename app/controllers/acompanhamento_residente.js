@@ -59,5 +59,41 @@ class AcompanhamentoResidente {
                 res.json(result[0])
             })
     }
+
+    getInfosAcompanhamento(req, res) {
+        const codigoAcompanhamento = req.params.codigoAcompanhamento
+
+        sequelize.query(
+            `SELECT 
+            A.CODIGO AS CODIGO_ACOMPANHAMENTO,
+            DATE_FORMAT(A.DATA_ACOMPANHAMENTO, '%d/%m/%Y') AS DATA_ACOMPANHAMENTO,
+            A.ATIVIDADE,
+            AF.ACOMPANHAMENTO_CODIGO,
+            F.CODIGO_FUNCIONARIO AS CODIGO_FUNCIONARIO,
+            F.CARGO AS CARGO_FUNCIONARIO,
+            P.CODIGO AS CODIGO_PESSOA,
+            GROUP_CONCAT(DISTINCT ' ',
+                P.NOME,
+                ' ',
+                P.SOBRENOME,
+                ' ',
+                '(',
+                F.CARGO,
+                ')') AS NOME_FUNCIONARIO
+        FROM
+            ACOMPANHAMENTO AS A
+                INNER JOIN
+            ACOMPANHAMENTO_FUNCIONARIO AS AF ON AF.ACOMPANHAMENTO_CODIGO = A.CODIGO
+                INNER JOIN
+            FUNCIONARIO AS F ON AF.CODIGO_FUNCIONARIO = F.CODIGO_FUNCIONARIO
+                INNER JOIN
+            PESSOA AS P ON F.PESSOA_CODIGO = P.CODIGO
+        WHERE
+            A.CODIGO = ${codigoAcompanhamento}
+        `
+        )
+            .then((infosAcompanhamento) => res.status(200).json(infosAcompanhamento[0]))
+            .catch((error) => res.status(500).json(error))
+    }
 }
 module.exports = new AcompanhamentoResidente()
